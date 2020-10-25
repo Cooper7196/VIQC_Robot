@@ -8,6 +8,27 @@
 
 static float armRequestedValue;
 static bool armMoving;
+
+task moveArm(){
+		while(true){
+			if(abs((getMotorEncoder(leftArmMotor) + getMotorEncoder(rightArmMotor)) / 2) - -200 > 200){
+					if(((getMotorEncoder(leftArmMotor) + getMotorEncoder(rightArmMotor)) / 2) > -200){
+						motor[leftArmMotor] = -100;
+						motor[rightArmMotor] = -100;
+					}
+					if(((getMotorEncoder(leftArmMotor) + getMotorEncoder(rightArmMotor)) / 2) < -200){
+						motor[leftArmMotor] = 100;
+						motor[rightArmMotor] = 100;
+					}
+			}
+				else{
+
+					motor[leftArmMotor] = 0;
+					motor[rightArmMotor] = 0;
+					stopTask(moveArm);
+				}
+		}
+}
 task armPID(){
 
 			resetMotorEncoder(rightArmMotor);
@@ -69,7 +90,7 @@ task main()
 	clearTimer(T1);
 	while(true) {
 
-		writeDebugStreamLine("Test: %d\n", motor[right]);
+		//writeDebugStreamLine("rightArmMotor: %d\n", getMotorEncoder(rightArmMotor));
 		//writeDebugStreamLine("%s\n", sensorType[gyro]);
 
 		motor[left] = -getJoystickValue(ChA) - getJoystickValue(ChC);
@@ -96,7 +117,7 @@ task main()
 				motor[leftArmMotor] = 0;
 		}
 		if(getJoystickValue(BtnFDown)){
-				armRequestedValue = -105;
+				startTask(moveArm);
 		}
 
 		if(getJoystickValue(BtnFUp) && time10[T1] >= 20){
