@@ -81,85 +81,13 @@ task armPID(){
          wait1Msec(25);
 			}
 }
-int Notes[][]= {
-{695, 25},
-{695, 25},
-{788, 25},
-{877, 25},
-{877, 25},
-{788, 25},
-{695, 25},
-{656, 25},
-{590, 25},
-{590, 25},
-{656, 25},
-{695, 25},
-{695, 25},
-{656, 13},
-{656, 50},
-{695, 25},
-{695, 25},
-{788, 25},
-{877, 25},
-{877, 25},
-{788, 25},
-{695, 25},
-{656, 25},
-{590, 25},
-{590, 25},
-{656, 25},
-{695, 25},
-{656, 25},
-{590, 13},
-{590, 50},
-{656, 25},
-{656, 25},
-{695, 25},
-{590, 25},
-{656, 25},
-{695, 13},
-{788, 13},
-{695, 25},
-{590, 25},
-{656, 25},
-{695, 13},
-{788, 13},
-{695, 25},
-{656, 25},
-{590, 25},
-{656, 25},
-{440, 50},
-{695, 25},
-{695, 25},
-{788, 25},
-{877, 25},
-{877, 25},
-{788, 25},
-{695, 25},
-{656, 25},
-{590, 25},
-{590, 25},
-{656, 25},
-{695, 25},
-{656, 25},
-{590, 13},
-{590, 50},
-};
 task main()
 {
 		startTask(armPID);
 		armMoving = true;
 		//armRequestedValue = -100
-		bool isReversed = false;
 		clearTimer(T1);
 
-		for (int i=0; i<62; i++)
-		{
-		playTone(Notes[i][0], Notes[i][1]);
-		playSound(sound);
-
-		while(bSoundActive);
-		}
 		while(true) {
 
 			//writeDebugStreamLine("rightArmMotor: %d\n", getMotorEncoder(rightArmMotor));
@@ -175,11 +103,11 @@ task main()
 					motor[side] = 0;
 			}
 		if(getJoystickValue(BtnLUp) == 1 && armRequestedValue > -460) {
-				armRequestedValue -= 0.04;
+				armRequestedValue -= 0.06;
 		}
 
 		else if(getJoystickValue(BtnLDown) == 1 && armRequestedValue < 50) {
-				armRequestedValue += 0.04;
+				armRequestedValue += 0.06;
 		}
 
 		if(getJoystickValue(BtnRUp) == 1){
@@ -192,29 +120,22 @@ task main()
 				motor[frontClaw] = 0;
 		}
 		if(getJoystickValue(BtnFDown)){
-				//armRequestedValue = -110;
-  //        100 = Tempo
-  //          6 = Default octave
-  //    Quarter = Default note length
-  //        10% = Break between notes
-  //
-
-
-
+				armRequestedValue = -105;
 		}
 		if(getJoystickValue(BtnFUp)){
 				motor[frontClaw] = -100;
 				motor[left] = -80;
 				motor[right] = -80;
 				wait10Msec(30);
-				armRequestedValue = -310;
 				motor[left] = 0;
 				motor[right] = 0;
-				wait10Msec(100);
+				wait10Msec(30);
+				armRequestedValue = -310;
+				wait10Msec(50);
 				motor[left] = -80;
 				motor[right] = -80;
 				wait10Msec(50);
 
-		}
+			}
 	}
 }
