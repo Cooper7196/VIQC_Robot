@@ -64,10 +64,17 @@ void drive(int amount, int speed){
 	int currentSpeed = motor[right];
 	while(abs(getMotorEncoder(right) - amount) > 40){
 		float angleDifference = getGyroHeadingFloat(gyro) - angle;
-		float rotationSpeed = (angleDifference - 0) / (360 - 0) * (100 - 10) + 10;
+		float rotationSpeed = (abs(angleDifference) - 0) / (180 - 0) * (speed - 0) + 0;
 		writeDebugStreamLine("%d", rotationSpeed);
-		//motor[left]	= currentSpeed - -rotationSpeed * 2;
-		//motor[right] = currentSpeed - rotationSpeed * 2;
+
+		if(angleDifference > 0){
+			motor[left]	= currentSpeed - -rotationSpeed;
+			motor[right] = currentSpeed - rotationSpeed;
+		}
+		else{
+			motor[left]	= currentSpeed - rotationSpeed;
+			motor[right] = currentSpeed - -rotationSpeed;
+		}
 	}
 	motor[left]	= 0;
 	motor[right] = 0;
@@ -112,7 +119,7 @@ void firstRiser(){
 
 	rotate(-87);
 
-	strafe(-430, 100);
+	strafe(-410, 100);
 
 	wait1Msec(300);
 
@@ -126,7 +133,7 @@ void firstRiser(){
 
 	drive(-400, 50);
 
-	strafe(390, 70);
+	strafe(430, 70);
 
 	rotate(-88);
 
@@ -136,9 +143,9 @@ void firstRiser(){
 
 	drive(285, 70);
 
-	rotate(-88);
+	strafe(-40, 50);
 
-	moveBottomClaw(false);
+	//moveBottomClaw(false);
 
 	drive(-200, 60);
 
@@ -152,7 +159,7 @@ void middleRiser(){
 
 	strafe(600, 100);
 
-	drive(1500, 80);
+	drive(1450, 80);
 
 	rotate(86);
 
@@ -163,12 +170,11 @@ void middleRiser(){
 	rotate(-85);
 	//moveArm(390, 100)
 
-	drive(1000, 80);
+	drive(950, 80);
 
 	wait1Msec(400);
 
 	drive(-500, 80);
-
 }
 
 void lastRiser(){
@@ -178,25 +184,45 @@ void lastRiser(){
 
 	strafe(640, 100);
 
-	rotate(0);
+	rotate(1);
 
-	drive(2500, 100);
+	drive(500, 50);
 
-	rotate(-86);
+	rotate(-87);
+
+	strafe(-2025, 80);
+
+	rotate(-88);
+
+	drive(500, 60);
+
+	moveArm(380, 100);
+
+	drive(-500, 70);
+
+	strafe(-450, 80);
+
+	rotate(-88);
 
 	drive(600, 70);
 
-	moveArm(290, 100);
+	strafe(150, 100);
 
-	drive(-500, 70);
+	drive(-150, 80);
+
+	strafe(-150, 100);
+
+	moveArm(-150, 20);
+
+	drive(-600, 80);
 }
 task main()
 {
 	//firstRiser();
 	//wait1Msec(5000);
-	moveArm(310, 100)
-	middleRiser();
-	//lastRiser();
+	moveArm(310, 100);
+	//middleRiser();
+	lastRiser();
 	while(true){}
 
 } //COMMENT YOUR CODE BETTER
