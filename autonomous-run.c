@@ -111,6 +111,8 @@ void moveArm(int amount, int speed){
 	motor[rightArmMotor] = 0;
 }
 void firstRiser(){
+	setMotorBrakeMode(left, motorHold);
+	setMotorBrakeMode(right, motorHold);
 	resetGyro(gyro);
 
 	wait1Msec(100);
@@ -119,7 +121,7 @@ void firstRiser(){
 
 	rotate(-87);
 
-	strafe(-410, 100);
+	strafe(-415, 100);
 
 	wait1Msec(300);
 
@@ -133,28 +135,36 @@ void firstRiser(){
 
 	drive(-400, 50);
 
-	strafe(430, 70);
+	strafe(445, 70);
 
 	rotate(-88);
 
-	drive(360, 50);
+	drive(590, 70);
 
 	//moveBottomClaw(true);
 
 	drive(285, 70);
 
-	strafe(-40, 50);
+	strafe(-150, 50);
 
 	//moveBottomClaw(false);
+
+	strafe(100, 50);
 
 	drive(-200, 60);
 
 	moveArm(-150, 40);
 
 	drive(-500, 70);
+
+	setMotorBrakeMode(left, motorCoast);
+	setMotorBrakeMode(right, motorCoast);
 }
 
 void middleRiser(){
+	setMotorBrakeMode(left, motorHold);
+	setMotorBrakeMode(right, motorHold);
+
 	resetGyro(gyro);
 
 	strafe(600, 100);
@@ -175,36 +185,41 @@ void middleRiser(){
 	wait1Msec(400);
 
 	drive(-500, 80);
+	setMotorBrakeMode(left, motorCoast);
+	setMotorBrakeMode(right, motorCoast);
 }
 
 void lastRiser(){
+	setMotorBrakeMode(left, motorHold);
+	setMotorBrakeMode(right, motorHold);
+
 	resetGyro(gyro);
 
 	moveArm(-210, 100);
 
-	strafe(640, 100);
+	strafe(600, 100);
 
 	rotate(1);
 
 	drive(500, 50);
 
-	rotate(-87);
+	rotate(-89);
 
-	strafe(-2025, 80);
+	strafe(-2050, 80);
 
-	rotate(-88);
+	rotate(-89);
 
-	drive(500, 60);
+	drive(400, 60);
 
 	moveArm(380, 100);
 
 	drive(-500, 70);
 
-	strafe(-450, 80);
+	strafe(-425, 80);
 
 	rotate(-88);
 
-	drive(600, 70);
+	drive(750, 70);
 
 	strafe(150, 100);
 
@@ -214,15 +229,19 @@ void lastRiser(){
 
 	moveArm(-150, 20);
 
-	drive(-600, 80);
+	drive(-1200, 80);
+
+	drive(300, 80);
+
+	setMotorBrakeMode(left, motorCoast);
+	setMotorBrakeMode(right, motorCoast);
 }
 task main()
 {
-	//firstRiser();
-	//wait1Msec(5000);
-	moveArm(310, 100);
-	//middleRiser();
+	firstRiser();
+	wait1Msec(5000);
+	middleRiser();
+	wait1Msec(5000);
+	wait1Msec(1000);
 	lastRiser();
-	while(true){}
-
 } //COMMENT YOUR CODE BETTER

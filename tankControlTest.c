@@ -71,15 +71,23 @@ task main()
 		while(true) {
 			motor[leftArmMotor] = motor[rightArmMotor];
 
-			if(abs(getJoystickValue(ChA)) > 30 || abs(getJoystickValue(ChC)) > 30){
-				motor[right] = getJoystickValue(ChA);
+			if(abs(getJoystickValue(ChA)) > 30){
 				motor[left] = getJoystickValue(ChA);
-				motor[right] -= getJoystickValue(ChC);
-				motor[left] += getJoystickValue(ChC);
 			}
 			else{
 					motor[left] = 0;
+			}
+			if(abs(getJoystickValue(ChD)) > 30){
+				motor[right] = getJoystickValue(ChD);
+			}
+			else{
 					motor[right] = 0;
+			}
+			if(abs(getJoystickValue(ChB)) > 30 || abs(getJoystickValue(ChC)) > 30){
+				motor[side] = fmax(getJoystickValue(ChB), fmax(getJoystickValue(ChB));
+			}
+			else{
+				motor[side] = 0;
 			}
 
 			if(abs(getJoystickValue(ChB)) > 20){
