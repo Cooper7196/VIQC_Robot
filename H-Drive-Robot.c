@@ -82,7 +82,7 @@ task main()
 					motor[right] = 0;
 			}
 
-			if(abs(getJoystickValue(ChB)) > 20){
+			if(abs(getJoystickValue(ChB)) > 40){
 					motor[side] = getJoystickValue(ChB);
 			}
 			else{
