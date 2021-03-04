@@ -10,12 +10,14 @@
 void rotate(float angle, float speed, float overshoot){
 	if (angle > getGyroHeadingFloat(gyro)){
 		while ((angle - overshoot) > getGyroHeadingFloat(gyro)){
+			writeDebugStreamLine("%d", getGyroHeadingFloat(gyro));
 			motor[left] = -speed;
 			motor[right] = speed;
 		}
 	}
 	else{
 		while ((angle + overshoot) < getGyroHeadingFloat(gyro)){
+			writeDebugStreamLine("%d", getGyroHeadingFloat(gyro));
 			motor[left] = speed;
 			motor[right] = -speed;
 		}
@@ -23,6 +25,7 @@ void rotate(float angle, float speed, float overshoot){
 	motor[left] = 0;
 	motor[right] = 0;
 }
+
 
 void strafe(int amount, int speed){
 	resetMotorEncoder(side);
@@ -52,25 +55,25 @@ void drive(float amount, float speed, float angle, float kp){
 		}
 	}
 	else{
-		while(getMotorEncoder(left) > amount){
+		while(getMotorEncoder(left) > (-amount)){
 			float error = angle - getGyroHeadingFloat(gyro);
 			float output = error * kp;
-			motor[left] = -(speed - output);
-			motor[right] = -(speed + output);
+			motor[left] = speed - output;
+			motor[right] = speed + output;
 		}
 	}
 	motor[right] = 0;
 	motor[left]	= 0;
 }
-void moveBottomClaw(bool raise){
+void moveClaw(bool raise){
 	if(raise){
-		motor[frontClaw] = 100;
-	}
-	else{
 		motor[frontClaw] = -100;
 	}
-	while(getMotorCurrent(frontClaw) < 500){writeDebugStreamLine("%d", getMotorCurrent(frontClaw));}
-	motor[frontClaw] = 0;
+	else{
+		motor[frontClaw] = 100;
+	}
+	wait10Msec(100);
+	//motor[frontClaw] = 0;
 }
 
 void moveArm(int amount, int speed){
@@ -93,14 +96,56 @@ void moveArm(int amount, int speed){
 	motor[leftArmMotor]	= 0;
 	motor[rightArmMotor] = 0;
 }
-
+void firstRiser(){
+	moveClaw(false);
+	drive(75, 80, 0, 1);
+	moveArm(400, 100);
+	rotate(-90, 50, 8);
+	drive(1000, 80, -90, 1);
+	drive(500, -80, -90, 1);
+	moveArm(-400, 100);
+	rotate(-75, 50, 5);
+	drive(500, 80, -75, 1);
+	moveClaw(true);
+	moveArm(400, 100);
+	rotate(-120, 50, 10);
+	drive(25, -80, -120, 1);
+	moveArm(-125, 50);
+	moveClaw(false);
+	drive(300, -80, -90, 1);
+}
+void secondRiser(){
+	moveClaw(false);
+	drive(100, 80, 0, 1);
+	moveArm(400, 100);
+	rotate(-90, 50, 8);
+	drive(500, 80, -90, 1);
+	rotate(0, 50, 17);
+	drive(1300, 80, 0, 1);
+	strafe(-200, 80);
+	rotate(-90, 50, 8);
+	drive(800, 80, -90, 1);
+	drive(1800, -80, -90, 1);
+}
+void thirdRiser(){
+	moveClaw(false);
+	drive(100, 80, 0, 1);
+	moveArm(400, 100);
+	rotate(-90, 50, 8);
+	drive(500, 80, -90, 1);
+	rotate(0, 50, 17);
+	drive(2300, 80, 0, 1);
+	rotate(-90, 50, 17);
+}
 task main()
 {
 startGyroCalibration(gyro, gyroCalibrateSamples2048);
 while(getGyroCalibrationFlag(gyro)){}
+wait10Msec(500);
 resetGyro(gyro);
-drive(2000, 80, 0, 2);
-rotate(-90, 50, 10);
+secondRiser();
+//drive(2000, 80, 0, 2);
+//rotate(-90, 50, 10);
 //	firstRiser();
 //	wait1Msec(5000);
 //	middleRiser();
